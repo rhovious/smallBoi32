@@ -130,6 +130,7 @@ void Leg::legIK(Vector *pTgt, JointAngle *pJA) {
 
     if (isnan(th) || isnan(ts) || isnan(tw)) {
         LOG("ERROR  leg:%d, %6.1f, %6.1f, %6.1f\n", _pos, th, ts, tw);
+        LOG("ERROR TS:  h:%6.1f, femurLength:%6.1f, tibiaLength:%6.1f, phi:%6.1f\n", h, _femurLength, _tibiaLength, phi);
         return;
     }
 

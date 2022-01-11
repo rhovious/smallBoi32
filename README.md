@@ -1,10 +1,14 @@
-# ESP32 QuadRuped
-**An open-source 3D-printed quadrupedal robots with ESP32. (SpotMicro and Kangal)**
+# SmallBoi32
+- **Fork of the original ESP32 qudruped project, adjusted to fit my needs. [link](https://github.com/PingguSoft/esp32_quadruped/)
+- **An open-source 3D-printed quadrupedal robots with ESP32. (SpotMicro32)** Kangal support to be removed
 - **Gait pattern generator using Processing**
 - **QuadRuped simulation using Processing**
 - **Balancing using IMU**
 - **FlyPad, GameSirT1D and Bluetooth LE joystick supported**
 
+# Changes to ESP32 QuadRuped Project [link](https://github.com/PingguSoft/esp32_quadruped/)
+* Added documents folder
+* Change servos to PDI-HV5523MG
 ## 1.Schematic
 <img src="https://github.com/PingguSoft/esp32_quadruped/blob/main/pics/schematic.png?raw=true" width="60%"><br>
 - Essential parts
@@ -12,11 +16,10 @@
   |---------------------|--------------------------------------|-----------|
   | ESP32 LOLIN32       | cpu                                  | 1         |
   | PCA9658 module      | servo motor controller               | 1         |
-  | SPT5430HV-180W 8.4V | HV servo motor                       | 12        |
+  | PDI-HV5523MG        | HV servo motor                       | 12        |
   | DC-DC buck converter| 7V-28V to 5V 3A                      | 1         |
   | 1S3P 18650 battery  | lithium ion battery                  | 2         |
-  | WS2812 RGB LED      | RGB LED for eyes                     | 2         |
-  | Round Rocker Switch | Switch with LED                      | 1         |
+  | 19mm Round Latching Switch | Switch with LED                      | 1         |
 
 - Optional parts
   | part name           | description                          |  unit     |
@@ -25,6 +28,7 @@
   | PDC004-PD 9V        | usb-c PD decoy module                | 1         |
   | STPS2045C           | power shottky rectifier              | 1         |
   | battery indicator   | Lithium Battery Capacity Indicator   | 1         |
+  | WS2812 RGB RING     | RGB LED for notifications, in back   | 1         |
 <br><br>
 
 ## 2.Hardware Configuration
@@ -85,7 +89,7 @@
 # Reference
   - IK model<br>
     [12-DOF Quadrupedal Robot: InverseKinematics by Adham Elarabawy](https://www.adham-e.dev/pdf/IK_Model.pdf)
-  - Kangal cad files<br>
-    [Diy quadruped robot by Baris ALP](https://grabcad.com/library/diy-quadruped-robot-1)
-  - SpotMicro cad files<br>
-    [User Fran Ferri models](https://gitlab.com/public-open-source/spotmicroai/3dprinting/-/tree/master/User%20Fran%20Ferri%20models)
+  - ESP32 Quadruped<br>
+    [ESP32 Quadruped](https://github.com/PingguSoft/esp32_quadruped)
+  - SpotMicroESP32 by michaelkubina<br>
+    [SpotMicroESP32 by michaelkubina](https://github.com/michaelkubina/SpotMicroESP32)

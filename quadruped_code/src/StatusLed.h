@@ -20,7 +20,7 @@
 */
 class StatusLed {
 public:
-    const static int ALL_POS = 0xff;
+    const static int ALL_POS = 0xff; //0xff IS 255
 
     typedef enum {
         COLOR_BLACK = 0,
@@ -37,7 +37,7 @@ public:
     } color_idx_t;
     
     StatusLed() : 
-        _ledStrip   { 0, PIN_LED_STRIP, LED_WS2812B_V2, 64, 2 },
+        _ledStrip   { 0, PIN_LED_STRIP, LED_WS2812B_V2, LED_MAX_BRIGHTNESS, LED_PIXEL_COUNT }, //channel (0), PIN, LED TYPE, NUMPIXELS
         _pStrands { &_ledStrip },        
         _tblColor   {
             pixelFromRGB(0, 0, 0),          // black

@@ -6,6 +6,7 @@
 #include "config.h"
 #include "VecRot.h"
 #include "utils.h"
+//#include "TimedMove.h" //RH added
 
 /*
 *****************************************************************************************
@@ -55,6 +56,7 @@ private:
     void loadConfig(void);
     void saveConfig(void);
     uint16_t analogReadAvg(uint16_t pin);
+    //TimedMove       _timedMoveRH;
 #if CONFIG_ENABLE_CAM_PAN_TILT
     void setPanTiltInternal(int ch, int deg10);
 #endif

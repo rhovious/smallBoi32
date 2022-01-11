@@ -8,9 +8,13 @@
 * CONSTANTS
 *****************************************************************************************
 */
+
+//SPT5430HV-180W
+    //max    -90    0    90  min
+    //2650  2540    1550
 #if (CONFIG_BODY == CONFIG_BODY_SPOTMICRO)
-    static const int kSERVO_PERIOD_MIN   =  650;
-    static const int kSERVO_PERIOD_MAX   = 2350;
+    static const int kSERVO_PERIOD_MIN   =  500; //650
+    static const int kSERVO_PERIOD_MAX   = 2540; //2350
 #elif (CONFIG_BODY == CONFIG_BODY_KANGAL)
     //SPT5430HV-180W
     //max    -90    0    90  min
@@ -19,8 +23,10 @@
     static const int kSERVO_PERIOD_MAX   = 2220;
 #endif
 
+//min and max degrees for servo rotation. 0-180
+
 static const int kDEG10_MIN          = 0;
-static const int kDEG10_MAX          = 1800;
+static const int kDEG10_MAX          = 1800; //1800
 
 /*
 *****************************************************************************************
@@ -57,12 +63,32 @@ const struct Hardware::_joint Hardware::_kJointRanges[BODY_NUM_JOINTS] = {
 // top view
 #if (CONFIG_BODY == CONFIG_BODY_SPOTMICRO)
     struct Hardware::_servo_cfg Hardware::_cfgServos[BODY_NUM_LEGS][BODY_NUM_JOINTS] = {
-        //   coxa          femur         tibia            leg no.
-        { { 12,  1, 0 }, { 13,  1, 0 }, { 14, -1, 0 } },  // right front
-        { {  8, -1, 0 }, {  9,  1, 0 }, { 10, -1, 0 } },  // right rear
-        { {  4, -1, 0 }, {  5, -1, 0 }, {  6,  1, 0 } },  // left  rear
-        { {  0,  1, 0 }, {  1, -1, 0 }, {  2,  1, 0 } }   // left  front
+        //   {coxa}          {femur}         {tibia}            //leg no.
+        //  { HIP}          {UPPER LEG}         {LOWER LEG}            //leg no.
+        //{SERVO NUMBER. DIRECTION, ???}
+        
+        { { 12,  -1, 0 }, { 13,  1, 0 }, { 14, 1, 0 } },  // front right  
+        { {  8, 1, 0 }, {  9,  1, 0 }, { 10, 1, 0 } },  // back right 
+        { {  4, -1, 0 }, {  5, 1, 0 }, {  6,  1, 0 } },  // back left  
+        { {  0,  1, 0 }, {  1, 1, 0 }, {  2,  1, 0 } }   // front left  
+
+
+/* BACKUP
+                { { 12,  1, 0 }, { 13,  1, 0 }, { 14, -1, 0 } },  // front right  
+        { {  8, -1, 0 }, {  9,  1, 0 }, { 10, -1, 0 } },  // back right 
+        { {  4, -1, 0 }, {  5, -1, 0 }, {  6,  1, 0 } },  // back left  
+        { {  0,  1, 0 }, {  1, -1, 0 }, {  2,  1, 0 } }   // front left  
+*/
+
+/* USING SERVOS NUMS FROM ORIGINAL BUILD
+    
+        { { 6,  -1, 0 }, { 7,  1, 0 }, { 8, 1, 0 } },  // right front
+        { {  0, 1, 0 }, {  1,  1, 0 }, { 2, 1, 0 } },  // right rear
+        { {  3, -1, 0 }, {  4, 1, 0 }, {  5,  1, 0 } },  // left  rear
+        { {  9,  1, 0 }, {  10, 1, 0 }, {  11,  1, 0 } }   // left  front
+        */
     };
+    
 #elif (CONFIG_BODY == CONFIG_BODY_KANGAL)
     // Please note that: The movement of the femur is effects to the tibia.
     // So it works dependent on it. Shortly; new tibia angle = tibia angle + femur angle
@@ -89,7 +115,10 @@ struct Hardware::_servo_cfg Hardware::_cfgPanTiltServos[2] = {
 */
 Hardware::Hardware() {
     memset(&_calAngles, 0, sizeof(_calAngles));
-    memset(&_calAnglesPanTilt, 0, sizeof(_calAnglesPanTilt));
+    #if CONFIG_ENABLE_CAM_PAN_TILT
+        memset(&_calAnglesPanTilt, 0, sizeof(_calAnglesPanTilt));
+        #endif
+    
 }
 
 void Hardware::setup(void) {
@@ -100,8 +129,9 @@ void Hardware::setup(void) {
     _servo.setOscillatorFrequency(27000000);
     _servo.setPWMFreq(getServoFreq());
     Wire.setClock(400000);
-
+    #if CONFIG_ENABLE_CAM_PAN_TILT
     setPanTilt(900, 900);
+    #endif
 }
 
 void Hardware::loadConfig(void) {
@@ -195,12 +225,14 @@ void Hardware::setJoint(int leg, int joint, int deg10) {
     _cfgServos[leg][joint].uS    = uS;
 
     _servo.writeMicroseconds(_cfgServos[leg][joint].pin, uS);
+    
 }
 
 void Hardware::setLeg(int leg, int a10, int b10, int c10) {
     setJoint(leg, 0, a10);
     setJoint(leg, 1, b10);
     setJoint(leg, 2, c10);
+    //delay(30);
 }
 
 void Hardware::calibrateLegs(int key) {
@@ -212,6 +244,7 @@ void Hardware::calibrateLegs(int key) {
             LOG("IDLE POSE (ALL 0 degree) !\n");
             for (int i = 0; i < BODY_NUM_LEGS; i++)
                 setLeg(i, 0, 0, 0);
+                //_timedMoveRH.go({ 0, 0, 0 }, { 0, 0, 0 }, 1000);
             break;
 
         case 'w':

@@ -1,7 +1,7 @@
 #include "Gait.h"
 
 Vector Gait::_vecStep(30, 30, 20);
-float  Gait::_stepsPerSec = 2.0f;
+float  Gait::_stepsPerSec = STEPS_PER_SECOND_RH;
 
 //: direction ratio calculation function
 Vector Gait::calcMoveRatio(Vector move) {
@@ -45,7 +45,7 @@ void Gait::doStep(int leg, Vector *move, Rotator *rot, bool enLog) {
     } else {
         if (_isComp && _iSwingLeg >= 0) {
             float pct   = abs(_fSwingAmplitude / _vecStep.z);
-            float roll  = (IS_RIGHT_LEG(_iSwingLeg) ? -pct : pct) * 2.0f;
+            float roll  = (IS_RIGHT_LEG(_iSwingLeg) ? -pct : pct) * 2.0f; //maybe change 2.0f to STEPS_PER_SECOND_RH?
             float pitch = (IS_FRONT_LEG(_iSwingLeg) ? -pct : pct) * 2.0f;
 
             rot->set(rot->yaw, pitch, roll);
